@@ -1,7 +1,9 @@
 const args = process.argv;
-const file = args[1];
 
-let Input = require('./src/input.js');
+let Crawl = require('./src/Crawl.js');
+let Input = require('./src/Input.js');
 
 // New instance of Input class
 let cliInput = new Input(args);
+let siteCrawl = new Crawl(cliInput.cleanArgs[0]);
+
