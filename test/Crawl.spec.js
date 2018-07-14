@@ -3,6 +3,8 @@ const expect =  require('chai').expect;
 
 describe('Crawl actions', () => {
 
-    
+    // Test init()
+
+    // Test getHostUrl method
 
 });

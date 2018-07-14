@@ -55,4 +55,6 @@ describe('Input - handle arguments', () => {
         expect(rawArgs).to.equal(3);
     });
 
+    // Add remove trailing slash test ...
+
 });
