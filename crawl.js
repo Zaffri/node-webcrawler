@@ -5,6 +5,11 @@
 const args = process.argv;
 
 /**
+ * Dependencies
+ */
+const jsdom = require("jsdom");
+
+/**
  * App Components
  */
 const Crawl = require('./src/Crawl.js');
@@ -16,6 +21,6 @@ const Input = require('./src/Input.js');
 let cliInput = new Input(args);
 let httpMod = cliInput.cleanArgs[0].startsWith('https') ? require('https') : require('http');
 
-let siteCrawl = new Crawl(cliInput.cleanArgs[0], httpMod, Input);
+let siteCrawl = new Crawl(cliInput.cleanArgs[0], httpMod, Input, jsdom);
 
 siteCrawl.init();

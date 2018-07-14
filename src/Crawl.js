@@ -1,21 +1,26 @@
+const Parse = require('./Parse.js');
+
 /**
  * @description crawl specifics
  */
-class Crawl {
+class Crawl extends Parse {
 
     /**
      * @description set site url and inject dependencies; Http/s & Input
      * @param {String} url 
      * @param {Http/Https} httpMod
      * @param {Input} Input
+     * @param {jsdom} jsdom
      */
-    constructor(url, httpMod, Input) {
+    constructor(url, httpMod, Input, jsdom) {
+        super();
 
         // Dependencies
         this.httpMod = httpMod;
+        this.jsdom = jsdom;
         this.Input = Input;
 
-        // Class properties
+        // Crawl properties
         this.url = this.getHostUrl(url);
         this.pages = [{ "crawled": false, "path": "", "links": [] }];
         this.currentPage = 0;
@@ -43,6 +48,8 @@ class Crawl {
                         // If page reachable
                         if(page.statusCode == 200) {
                             // Get all anchor links & setup new pages
+                            this.setupDom(html);
+                            this.getPageLinks();
                         }
 
                         console.log(html);
