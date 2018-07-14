@@ -55,6 +55,29 @@ describe('Input - handle arguments', () => {
         expect(rawArgs).to.equal(3);
     });
 
-    // Add remove trailing slash test ...
+    /**
+     * Remove trailing slash test 1
+     */
+    it('Should match \'example.com\' (remove trailing slash)', () => {
+        
+        let testUrl = 'example.com/';
+        let testUrlMatch = 'example.com';
+
+        let test = Input.removeTrailingSlash(testUrl);
+
+        expect(test).to.equal(testUrlMatch);
+    });
+
+    /**
+     * Remove trailing slash test 2 - with no trailing slash
+     */
+    it('Should match \'example.com\' (no trailing slash)', () => {
+        
+        let testUrl = 'example.com';
+
+        let test = Input.removeTrailingSlash(testUrl);
+
+        expect(test).to.equal(testUrl);
+    });
 
 });
