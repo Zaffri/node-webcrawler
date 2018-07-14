@@ -48,11 +48,11 @@ class Crawl extends Parse {
                         // If page reachable
                         if(page.statusCode == 200) {
                             // Get all anchor links & setup new pages
-                            this.setupDom(html);
-                            this.getPageLinks();
+                            let dom = this.setupDom(html);
+                            let links = this.getPageLinks(dom);
                         }
 
-                        console.log(html);
+                        //console.log(html);
                         
                         // Increment page & check current page is at index end
                         this.currentPage++;
