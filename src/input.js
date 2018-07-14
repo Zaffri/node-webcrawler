@@ -19,6 +19,14 @@ class Input {
         let cleanArgs = args.slice(2);
         return cleanArgs;
     }
+
+    /**
+     * @description Removes trailing slash if exists
+     * @param {String} url 
+     */
+    static removeTrailingSlash(url) {
+        return url.endsWith('/') ? url.slice(0, url.length - 1) : url;
+    }
 }
 
 module.exports = Input;

@@ -1,4 +1,4 @@
-const Input = require('../src/input.js');
+const Input = require('../src/Input.js');
 const expect =  require('chai').expect;
 
 describe('Input - handle arguments', () => {
@@ -54,5 +54,7 @@ describe('Input - handle arguments', () => {
 
         expect(rawArgs).to.equal(3);
     });
+
+    // Add remove trailing slash test ...
 
 });

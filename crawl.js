@@ -1,7 +1,21 @@
+/**
+ * CLI Input
+ * Format: node crawl.js http://www.example.com
+ */
 const args = process.argv;
-const file = args[1];
 
-let Input = require('./src/input.js');
+/**
+ * App Components
+ */
+const Crawl = require('./src/Crawl.js');
+const Input = require('./src/Input.js');
 
-// New instance of Input class
+/**
+ * Handle Input & Initiate Crawl
+ */
 let cliInput = new Input(args);
+let httpMod = cliInput.cleanArgs[0].startsWith('https') ? require('https') : require('http');
+
+let siteCrawl = new Crawl(cliInput.cleanArgs[0], httpMod, Input);
+
+siteCrawl.init();
