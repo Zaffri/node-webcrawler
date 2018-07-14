@@ -39,10 +39,9 @@ class Parse {
         let links = [];
 
         for(let x=0; x<tags.length; x++) {
-            //console.log(tags[x].href);
+            // Check if valid link
             if(this.isLink(tags[x].href)) {
                 links.push(tags[x].href);
-                console.log(tags[x].href);
             }
         }
         return links;
