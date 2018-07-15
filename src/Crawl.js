@@ -139,22 +139,27 @@ class Crawl extends Parse {
             // Check if url exists
             if(this.pageExists(urls[x]) == false) {
 
-                // 'added' for testing
-                added++;
-                
-                // Get path
-                let path = (urls[x].startsWith('/')) ? urls[x] : this.getUrlPath(urls[x]);
+                // Only add if internal link
+                if(this.urlIsInternal(urls[x])) {
 
-                // Add to page ... 
-                this.pages.push({
-                    "crawled": false, 
-                    "path": path, 
-                    "links": [] // currently not using links, remove?
-                });
+                    // 'added' for testing
+                    added++;
+                    
+                    // Get path
+                    let path = (urls[x].startsWith('/')) ? urls[x] : this.getUrlPath(urls[x]);
+                    console.log(urls[x]);
+
+                    // Add to page ... 
+                    this.pages.push({
+                        "crawled": false, 
+                        "path": path, 
+                        "links": [] // currently not using links, remove?
+                    });
+                }
             }
         }
         console.log("total len = "+urls.length);
-        console.log("added (duplicates removed) = "+added+" ("+ (urls.length-added) +")");
+        console.log("added (duplicates & externals removed) = "+added+" ("+ (urls.length-added) +")");
     }
 
     /**
@@ -203,6 +208,28 @@ class Crawl extends Parse {
      */
     getUrlPath(url) {
         return url.slice(this.url.length);
+    }
+
+    /**
+     * @description check if url is internal or external
+     * @param {String} url
+     */
+    urlIsInternal(url) {
+        
+        // Check if full url or path
+        if(url.startsWith('/')) {
+            return true;
+        }
+
+        // Slice any trailing paths
+        let len = this.url.length;
+        let comparison = url.slice(0, len); 
+
+        if(comparison == this.url) {
+            return true;
+        }
+
+        return false;
     }
 }
 
