@@ -43,3 +43,4 @@ The name of the file to save results to. Default value is 'result'.
 
 * Add check for URL fragment i.e. '#' symbols in URL's.
 * Add check for 'NPM run test' and manually hitting 'crawl.js'. 
+* Add logic for checking JS links.
