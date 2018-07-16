@@ -12,17 +12,21 @@ class Crawl extends Parse {
      * @param {Input} Input
      * @param {jsdom} jsdom
      */
-    constructor(url, httpMod, Input, jsdom) {
+    constructor(args, httpMod, Input, Output, jsdom) {
         super();
+        let url = args[0];
+        let filename = (args.length > 1) ? args[1] : 'defaultFileName';
 
         // Dependencies
         this.httpMod = httpMod;
         this.jsdom = jsdom;
         this.Input = Input;
+        this.Output = Output;
 
         // Crawl properties
         this.rawUrl = url;
         this.url = this.getHostUrl(url);
+        this.fileName = filename;
         this.pages = [{ "crawled": false, "path": "", "links": [] }]; // currently not using links, remove?
         this.currentPage = 0;
         this.complete = false;
@@ -73,6 +77,7 @@ class Crawl extends Parse {
             }
         }
 
+        this.Output.saveToCsv(this.pages, this.fileName);
     }
 
     /**
@@ -127,9 +132,6 @@ class Crawl extends Parse {
      */
     addNewPages(urls) {
 
-        // 'added' for testing
-        let added = 0;
-
         // Iterate through all urls
         for(let x=0; x<urls.length; x++) {
 
@@ -138,9 +140,6 @@ class Crawl extends Parse {
 
                 // Only add if internal link
                 if(this.urlIsInternal(urls[x])) {
-
-                    // 'added' for testing
-                    added++;
                     
                     // Get path
                     let path = (urls[x].startsWith('/')) ? urls[x] : this.getUrlPath(urls[x]);
@@ -154,8 +153,6 @@ class Crawl extends Parse {
                 }
             }
         }
-        //console.log("total len = "+urls.length);
-        //console.log("added (duplicates & externals removed) = "+added+" ("+ (urls.length-added) +")");
     }
 
     /**
