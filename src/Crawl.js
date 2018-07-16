@@ -30,7 +30,7 @@ class Crawl extends Parse {
     /**
      * @description begin site crawl
      */
-    init() {
+    async init() {
         console.log(this.url);
 
         while(this.complete == false) {
@@ -43,7 +43,7 @@ class Crawl extends Parse {
                 console.log('Crawling page('+ (this.currentPage+1) +') : '+page.path);
 
                 // Call sendRequest and handle promise
-                this.sendRequest(page.path, this.currentPage)
+                await this.sendRequest(page.path, this.currentPage)
                     .then((html) => {
 
                         // If page reachable
@@ -53,8 +53,6 @@ class Crawl extends Parse {
                             let links = this.getPageLinks(dom);
                             this.addNewPages(links);
                         }
-
-                        //console.log(html);
                         
                         // Increment page & check current page is at index end
                         this.currentPage++;
@@ -69,10 +67,13 @@ class Crawl extends Parse {
                         console.error(err);
                     }); 
 
+                    await this.requestDelay(1000);
             }
 
             // Set to true for testing purposes atm - 1 iteration
-            this.complete = true;
+            // if(this.pages.length > 1) {
+            //     this.complete = true;
+            // }
         }
 
     }
@@ -92,7 +93,6 @@ class Crawl extends Parse {
             }, (response) => {
                 // Set response code
                 this.pages[currentPage].statusCode = response.statusCode;
-                console.log('Status: '+ response.statusCode);
 
                 // Add to body arr
                 const bodyArr = [];
@@ -147,7 +147,7 @@ class Crawl extends Parse {
                     
                     // Get path
                     let path = (urls[x].startsWith('/')) ? urls[x] : this.getUrlPath(urls[x]);
-                    console.log(urls[x]);
+                    //console.log(urls[x]);
 
                     // Add to page ... 
                     this.pages.push({
@@ -158,8 +158,8 @@ class Crawl extends Parse {
                 }
             }
         }
-        console.log("total len = "+urls.length);
-        console.log("added (duplicates & externals removed) = "+added+" ("+ (urls.length-added) +")");
+        //console.log("total len = "+urls.length);
+        //console.log("added (duplicates & externals removed) = "+added+" ("+ (urls.length-added) +")");
     }
 
     /**
@@ -230,6 +230,15 @@ class Crawl extends Parse {
         }
 
         return false;
+    }
+
+    /**
+     * @description delay to limit requests per x
+     * @param {Number} delay 
+     */
+    requestDelay(delay) {
+        console.log('waiting ... '+delay+' ms');
+        return new Promise(resolve => setTimeout(resolve, delay));
     }
 }
 
