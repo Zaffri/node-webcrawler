@@ -21,6 +21,7 @@ class Crawl extends Parse {
         this.Input = Input;
 
         // Crawl properties
+        this.rawUrl = url;
         this.url = this.getHostUrl(url);
         this.pages = [{ "crawled": false, "path": "", "links": [] }]; // currently not using links, remove?
         this.currentPage = 0;
@@ -68,12 +69,8 @@ class Crawl extends Parse {
                     }); 
 
                     await this.requestDelay(1000);
+                    console.log("pages="+this.pages.length+" currentPage="+this.currentPage);
             }
-
-            // Set to true for testing purposes atm - 1 iteration
-            // if(this.pages.length > 1) {
-            //     this.complete = true;
-            // }
         }
 
     }
@@ -147,7 +144,6 @@ class Crawl extends Parse {
                     
                     // Get path
                     let path = (urls[x].startsWith('/')) ? urls[x] : this.getUrlPath(urls[x]);
-                    //console.log(urls[x]);
 
                     // Add to page ... 
                     this.pages.push({
@@ -207,7 +203,7 @@ class Crawl extends Parse {
      * @param {String} url 
      */
     getUrlPath(url) {
-        return url.slice(this.url.length);
+        return url.slice(this.rawUrl.length);
     }
 
     /**
@@ -222,10 +218,10 @@ class Crawl extends Parse {
         }
 
         // Slice any trailing paths
-        let len = this.url.length;
+        let len = this.rawUrl.length;
         let comparison = url.slice(0, len); 
 
-        if(comparison == this.url) {
+        if(comparison == this.rawUrl) {
             return true;
         }
 
