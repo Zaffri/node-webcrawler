@@ -4,5 +4,6 @@ node_modules
 .vscode
 
 # App Specifics
-output/*
-!ouput/.gitkeep
+output
+!src/output/*
+!output/.gitkeep
