@@ -6,8 +6,13 @@ Simple webcrawler built with NodeJS. It makes use of the built in NodeJS HTTP & 
 
 ## Usage & Examples
 
-Run ./crawl.js and pass a URL with a HTTP/S prefix.
+1. Install dependencies.
 
+```
+npm install
+```
+
+2. Run ./crawl.js and pass a URL with a HTTP/S prefix.
 
 *Example 1*
 
