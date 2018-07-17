@@ -178,6 +178,9 @@ class Crawl extends Parse {
             pathUrl = this.getUrlPath(url);
         }
 
+        // Check if URL fragment '#'
+        pathUrl = this.removeUrlFragment(pathUrl);
+
         // Loop through pages
         for(let x=0; x<this.pages.length; x++) {
 
@@ -231,6 +234,22 @@ class Crawl extends Parse {
     requestDelay(delay) {
         console.log('waiting ... '+delay+' ms');
         return new Promise(resolve => setTimeout(resolve, delay));
+    }
+
+    /**
+     * @description search and remove url fragment '#'
+     * @param {String} path 
+     */
+    removeUrlFragment(path) {
+        // Check for '#'
+        let pos = path.indexOf("#");
+
+        // Doesn't = -1 then it's been found
+        if(pos != -1) {
+            path = path.substring(0, pos);
+        }
+
+        return path;
     }
 }
 
