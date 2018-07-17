@@ -12,17 +12,21 @@ class Crawl extends Parse {
      * @param {Input} Input
      * @param {jsdom} jsdom
      */
-    constructor(url, httpMod, Input, jsdom) {
+    constructor(args, httpMod, Input, Output, jsdom) {
         super();
+        let url = args[0];
+        let filename = (args.length > 1) ? args[1] : 'defaultFileName';
 
         // Dependencies
         this.httpMod = httpMod;
         this.jsdom = jsdom;
         this.Input = Input;
+        this.Output = Output;
 
         // Crawl properties
         this.rawUrl = url;
         this.url = this.getHostUrl(url);
+        this.fileName = filename;
         this.pages = [{ "crawled": false, "path": "", "links": [] }]; // currently not using links, remove?
         this.currentPage = 0;
         this.complete = false;
@@ -59,7 +63,7 @@ class Crawl extends Parse {
                         this.currentPage++;
                         page.crawled = true;
 
-                        if(this.currentPage >= (this.pages.length - 1)) {
+                        if(this.currentPage > (this.pages.length - 1)) {
                             this.complete = true;
                         }
 
@@ -73,6 +77,7 @@ class Crawl extends Parse {
             }
         }
 
+        this.Output.saveToCsv(this.pages, this.fileName, this.rawUrl);
     }
 
     /**
@@ -95,13 +100,15 @@ class Crawl extends Parse {
                 const bodyArr = [];
                 response.on('data', (chunk) => {
                     bodyArr.push(chunk);
+                    this.pages[currentPage].crawled = true;
                 });
 
                 // Handle completion
-                response.on('end', () => 
+                response.on('end', () => {
                     // Send body as string
-                    resolve(bodyArr.join(''))
-                );
+                    this.pages[currentPage].time = new Date().toISOString().substr(11, 8);
+                    resolve(bodyArr.join(''));
+                });
             });
 
             // Handle req error
@@ -127,9 +134,6 @@ class Crawl extends Parse {
      */
     addNewPages(urls) {
 
-        // 'added' for testing
-        let added = 0;
-
         // Iterate through all urls
         for(let x=0; x<urls.length; x++) {
 
@@ -138,12 +142,9 @@ class Crawl extends Parse {
 
                 // Only add if internal link
                 if(this.urlIsInternal(urls[x])) {
-
-                    // 'added' for testing
-                    added++;
                     
                     // Get path
-                    let path = (urls[x].startsWith('/')) ? urls[x] : this.getUrlPath(urls[x]);
+                    let path = (urls[x].startsWith('/')) ? urls[x].slice(1, urls[x].length) : this.getUrlPath(urls[x]);
 
                     // Add to page ... 
                     this.pages.push({
@@ -154,8 +155,6 @@ class Crawl extends Parse {
                 }
             }
         }
-        //console.log("total len = "+urls.length);
-        //console.log("added (duplicates & externals removed) = "+added+" ("+ (urls.length-added) +")");
     }
 
     /**
@@ -170,6 +169,10 @@ class Crawl extends Parse {
         if(url.startsWith('/')) {
             fullUrl = this.url + url;
             pathUrl = url;
+
+            // Check if path is '/' as we don't want to crawl again
+            if(url.trim().length == 1) return true;
+
         }   else {
             fullUrl = url;
             pathUrl = this.getUrlPath(url);
@@ -180,20 +183,12 @@ class Crawl extends Parse {
 
             let currentPageUrl = this.pages[x].path;
 
-            // Use specific url to check - path or full
-            if(currentPageUrl.startsWith('/')) {
-                // Check for match
-                if(currentPageUrl == pathUrl) {
-                    exists = true;
-                    break;
-                }
-            }   else {
-                // Check for match
-                if(currentPageUrl == fullUrl) {
-                    exists = true;
-                    break;
-                }
+            // Check for match
+            if(currentPageUrl == pathUrl) {
+                exists = true;
+                break;
             }
+            
         }
         return exists;
     }
@@ -203,7 +198,8 @@ class Crawl extends Parse {
      * @param {String} url 
      */
     getUrlPath(url) {
-        return url.slice(this.rawUrl.length);
+        let path = url.slice(this.rawUrl.length);
+        return (path.startsWith('/')) ? path.slice(1, path.length) : path;
     }
 
     /**

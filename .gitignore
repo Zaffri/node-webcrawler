@@ -1,3 +1,9 @@
+# General
 node_modules
 .idea
 .vscode
+
+# App Specifics
+output
+!src/output/*
+!output/.gitkeep
