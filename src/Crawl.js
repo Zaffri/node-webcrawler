@@ -143,7 +143,7 @@ class Crawl extends Parse {
                 if(this.urlIsInternal(urls[x])) {
                     
                     // Get path
-                    let path = (urls[x].startsWith('/')) ? urls[x] : this.getUrlPath(urls[x]);
+                    let path = (urls[x].startsWith('/')) ? urls[x].slice(1, urls[x].length) : this.getUrlPath(urls[x]);
 
                     // Add to page ... 
                     this.pages.push({
@@ -168,6 +168,10 @@ class Crawl extends Parse {
         if(url.startsWith('/')) {
             fullUrl = this.url + url;
             pathUrl = url;
+
+            // Check if path is '/' as we don't want to crawl again
+            if(url.trim().length == 1) return true;
+
         }   else {
             fullUrl = url;
             pathUrl = this.getUrlPath(url);
@@ -178,20 +182,12 @@ class Crawl extends Parse {
 
             let currentPageUrl = this.pages[x].path;
 
-            // Use specific url to check - path or full
-            if(currentPageUrl.startsWith('/')) {
-                // Check for match
-                if(currentPageUrl == pathUrl) {
-                    exists = true;
-                    break;
-                }
-            }   else {
-                // Check for match
-                if(currentPageUrl == fullUrl) {
-                    exists = true;
-                    break;
-                }
+            // Check for match
+            if(currentPageUrl == pathUrl) {
+                exists = true;
+                break;
             }
+            
         }
         return exists;
     }
@@ -201,7 +197,8 @@ class Crawl extends Parse {
      * @param {String} url 
      */
     getUrlPath(url) {
-        return url.slice(this.rawUrl.length);
+        let path = url.slice(this.rawUrl.length);
+        return (path.startsWith('/')) ? path.slice(1, path.length) : path;
     }
 
     /**
