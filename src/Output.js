@@ -10,8 +10,8 @@ class Output {
      * @description save as CSV format
      * @param {String} filename 
      */
-    static saveToCsv(crawl, filename) {
-        CSV.save(crawl, filename, defaultDir);
+    static saveToCsv(crawl, filename, hostUrl) {
+        CSV.save(crawl, filename, defaultDir, hostUrl);
     }
 }
 

@@ -77,7 +77,7 @@ class Crawl extends Parse {
             }
         }
 
-        this.Output.saveToCsv(this.pages, this.fileName);
+        this.Output.saveToCsv(this.pages, this.fileName, this.rawUrl);
     }
 
     /**
@@ -100,6 +100,7 @@ class Crawl extends Parse {
                 const bodyArr = [];
                 response.on('data', (chunk) => {
                     bodyArr.push(chunk);
+                    this.pages[currentPage].crawled = true;
                 });
 
                 // Handle completion
