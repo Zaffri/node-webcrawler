@@ -63,7 +63,7 @@ class Crawl extends Parse {
                         this.currentPage++;
                         page.crawled = true;
 
-                        if(this.currentPage >= (this.pages.length - 1)) {
+                        if(this.currentPage > (this.pages.length - 1)) {
                             this.complete = true;
                         }
 
@@ -104,10 +104,11 @@ class Crawl extends Parse {
                 });
 
                 // Handle completion
-                response.on('end', () => 
+                response.on('end', () => {
                     // Send body as string
-                    resolve(bodyArr.join(''))
-                );
+                    this.pages[currentPage].time = new Date().toISOString().substr(11, 8);
+                    resolve(bodyArr.join(''));
+                });
             });
 
             // Handle req error

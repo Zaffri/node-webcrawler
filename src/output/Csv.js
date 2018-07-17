@@ -20,8 +20,9 @@ class Csv {
             
             let url =  (hostUrl.endsWith('/')) ? hostUrl+crawl[x].path : hostUrl+'/'+crawl[x].path; 
             let statusCode = crawl[x].statusCode;
+            let time = crawl[x].time;
 
-            let newLine = url +', '+ statusCode +' \n';
+            let newLine = time+', '+url +', '+ statusCode +' \n';
             output += newLine;
         }
 
@@ -36,7 +37,7 @@ class Csv {
     }
 
     static getCsvHeader() {
-        return 'URL, Status \n';
+        return 'Time, URL, Status \n';
     }
 }
 
