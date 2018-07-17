@@ -15,7 +15,7 @@ class Crawl extends Parse {
     constructor(args, httpMod, Input, Output, jsdom) {
         super();
         let url = args[0];
-        let filename = (args.length > 1) ? args[1] : 'defaultFileName';
+        let filename = (args.length > 1) ? args[1] : 'result';
 
         // Dependencies
         this.httpMod = httpMod;
